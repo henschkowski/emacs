@@ -1,0 +1,4 @@
+/.dir-locals.el
+*~
+/emacs.d/projectile-bookmarks.eld
+/emacs.d/url/cookies
