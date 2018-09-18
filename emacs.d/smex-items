@@ -1,0 +1,36 @@
+
+;; ----- smex-history -----
+(
+ package-install
+ package-refresh-contents
+ comment-region
+ find-grep
+ find-grep-dired
+ customize
+ customize-group
+)
+
+;; ----- smex-data -----
+(
+ (package-install . 8)
+ (comment-region . 2)
+ (windmove-default-keybindings . 1)
+ (eval-region . 2)
+ (pdb . 13)
+ (customize-group . 3)
+ (find-dired . 1)
+ (gud-break . 2)
+ (cd . 2)
+ (Python . 1)
+ (py-execute-region . 3)
+ (calc . 2)
+ (recentf-edit-list . 2)
+ (package-refresh-contents . 4)
+ (package-list-packages . 1)
+ (package-show-package-list . 1)
+ (join-region . 1)
+ (indent-region . 1)
+ (find-grep . 12)
+ (customize . 4)
+ (find-grep-dired . 6)
+)
