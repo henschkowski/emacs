@@ -19,7 +19,7 @@
  ;; If there is more than one, they won't work right.
  '(blink-matching-paren t)
  '(clean-buffer-list-delay-general 1)
- '(clean-buffer-list-kill-never-buffer-names (quote ("*scratch*" "*Messages*" ".emacs" "notes.txt")))
+ '(clean-buffer-list-kill-never-buffer-names (quote ("*scratch*" "*Messages*" "init.el" "notes.txt")))
  '(clean-buffer-list-kill-never-regexps (quote ("^ \\*Minibuf-.*\\*$")))
  '(csv-separators (quote (";" "	")))
  '(dimmer-fraction 0.35)
@@ -57,6 +57,7 @@
  '(py-tab-indent t)
  '(reb-re-syntax (quote string))
  '(require-final-newline nil)
+ '(safe-local-variable-values (quote ((magit-refresh-buffers))))
  '(slime-load-failed-fasl (quote always))
  '(tail-hide-delay 5)
  '(tail-max-size 10)
@@ -930,7 +931,7 @@ DIR."
 
 (beacon-mode 1)
 (dimmer-mode)
-;;; .emacs ends here
+;;; init.el ends here
 
 
 
