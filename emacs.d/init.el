@@ -19,9 +19,12 @@
  ;; If there is more than one, they won't work right.
  '(blink-matching-paren t)
  '(clean-buffer-list-delay-general 1)
- '(clean-buffer-list-kill-never-buffer-names (quote ("*scratch*" "*Messages*" "init.el" "notes.txt")))
+ '(clean-buffer-list-kill-never-buffer-names (quote ("*scratch*" "*Messages*" "init.el" "psps.csv" ".emacs" "notes.txt")))
  '(clean-buffer-list-kill-never-regexps (quote ("^ \\*Minibuf-.*\\*$")))
  '(csv-separators (quote (";" "	")))
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" default)))
  '(dimmer-fraction 0.35)
  '(dired-recursive-copies (quote always))
  '(dirtrack-list (quote (":\\(.*\\)\\$" 1)))
@@ -29,6 +32,7 @@
  '(global-eldoc-mode nil)
  '(grep-highlight-matches nil)
  '(grep-use-null-device nil)
+ '(helm-candidate-number-limit 5000)
  '(hlt-use-overlays-flag nil)
  '(indent-tabs-mode nil)
  '(line-number-display-limit-width 300)
@@ -47,14 +51,18 @@
  '(nxml-child-indent 4)
  '(package-selected-packages
    (quote
-    (hungry-delete dimmer beacon focus dashboard replace+ csv-nav elpy pyvenv helm-projectile projectile better-defaults web-mode undo-tree yaml-mode urlenc realgud avy csv-mode highlight highlight-tail chess yasnippet smex smart-tabs-mode slime org-present multiple-cursors markdown-mode+ magit jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes flx-ido find-file-in-repository expand-region bm autopair)))
+    (helm-swoop edit-server-htmlize acme-search nord-theme evil-indent-plus highlight-indent-guides outline-magic solarized-theme magit-gitflow hungry-delete dimmer beacon focus dashboard replace+ csv-nav elpy pyvenv helm-projectile projectile better-defaults web-mode undo-tree yaml-mode urlenc realgud avy csv-mode highlight highlight-tail chess yasnippet smex smart-tabs-mode slime org-present multiple-cursors markdown-mode+ magit jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes flx-ido find-file-in-repository expand-region bm autopair)))
  '(package-user-dir "~/.emacs.d")
+ '(projectile-generic-command
+   "find . \\( -path ./.git -o -path *.class \\) -prune -o -type f -print0")
  '(projectile-indexing-method (quote alien))
+ '(projectile-project-root-files-bottom-up (quote (".projectile")))
  '(projectile-tags-command
    "\"/usr/bin/ctags\" -Re --options=\"~/dev/.ctags.conf\" -f \"%s\" %s")
  '(py-smart-indentation nil)
  '(py-switch-buffers-on-execute-p nil)
  '(py-tab-indent t)
+ '(python-shell-interpreter "python3")
  '(reb-re-syntax (quote string))
  '(require-final-newline nil)
  '(safe-local-variable-values (quote ((magit-refresh-buffers))))
@@ -90,56 +98,87 @@
 (package-initialize)
 
 
-(defvar rh-packages '(
-                      async
-                      auto-complete
-                      autopair
-                      better-defaults
-                      bm
-                      concurrent
-                      ctable
-                      dash
-                      deferred
-                      epc
-                      epl
-                      expand-region
-                      find-file-in-repository
-                      flx
-                      flx-ido
-                      flycheck
-                      flycheck-pyflakes
-                      git-commit
-                      git-timemachine
-                      google
-                      grizzl
-                      helm
-                      helm-core
-                      helm-flycheck
-                      helm-google
-                      helm-projectile
-                      ido-vertical-mode
-                      jedi
-                      jedi-core
-                      let-alist
-                      magit
-                      magit-popup
-                      markdown-mode
-                      markdown-mode+
-                      multiple-cursors
-                      pkg-info
-                      popup
-                      projectile
-                      python-environment
-                      python-mode
-                      slime
-                      smart-tabs-mode
-                      smex
-                      with-editor
-                      yasnippet
-                      undo-tree
-                      visual-regexp)
-  "My Lisp packages.")
-
+(defvar rh-packages '( nord-theme
+                       autopair
+                       avy
+                       beacon
+                       better-defaults
+                       bm
+                       chess
+                       csv-mode
+                       csv-nav
+                       dashboard
+                       dimmer
+                       elpy
+                       company
+                       evil-indent-plus
+                       evil
+                       expand-region
+                       find-file-in-project
+                       find-file-in-repository
+                       flx-ido
+                       flx
+                       flycheck-pyflakes
+                       focus
+                       git-timemachine
+                       goto-chg
+                       grizzl
+                       helm-flycheck
+                       flycheck
+                       helm-google
+                       helm-projectile
+                       helm
+                       helm-core
+                       highlight-chars
+                       highlight-indent-guides
+                       highlight-indentation
+                       hungry-delete
+                       ido-vertical-mode
+                       ivy
+                       jedi
+                       auto-complete
+                       jedi-core
+                       epc
+                       ctable
+                       concurrent
+                       magit-gitflow
+                       magit
+                       git-commit
+                       ghub
+                       let-alist
+                       magit-popup
+                       markdown-mode+
+                       markdown-mode
+                       multiple-cursors
+                       outline-magic
+                       page-break-lines
+                       popup
+                       projectile
+                       pkg-info
+                       epl
+                       python-environment
+                       deferred
+                       pyvenv
+                       realgud
+                       loc-changes
+                       load-relative
+                       replace+
+                       s
+                       seq
+                       slime
+                       macrostep
+                       smart-tabs-mode
+                       smex
+                       solarized-theme
+                       dash
+                       test-simple
+                       undo-tree
+                       visual-regexp
+                       with-editor
+                       async
+                       yaml-mode
+                       yasnippet)
+  "My Lisp Packages") 
 
 
 (defun my-install-packages ()
@@ -196,7 +235,7 @@
  '(custom-link ((default nil) (nil (:foreground "cyan"))))
  '(ediff-current-diff-C ((t (:background "honeydew3"))))
  '(ediff-fine-diff-B ((t (:background "pale green"))))
- '(font-lock-builtin-face ((((class color) (min-colors 8)) (:foreground "yellow" :weight bold))))
+ '(font-lock-builtin-face ((t (:foreground "dark orange" :slant normal :weight bold))))
  '(font-lock-comment-face ((((class color) (min-colors 8)) (:foreground "red"))))
  '(font-lock-function-name-face ((((class color) (min-colors 8)) (:foreground "lightblue" :weight bold))))
  '(font-lock-keyword-face ((((class color) (min-colors 8)) (:foreground "red" :weight bold))))
@@ -204,6 +243,10 @@
  '(helm-selection ((t (:foreground "light sea green"))))
  '(highlight-changes ((t (:foreground "SeaGreen1"))))
  '(highlight-changes-delete ((t (:foreground "SeaGreen" :underline t))))
+ '(magit-diff-file-heading-highlight ((t (:background "dark slate blue" :foreground "white"))))
+ '(magit-diff-hunk-heading ((t (:background "dim gray" :foreground "orange"))))
+ '(magit-diff-hunk-heading-highlight ((t (:background "SlateBlue4"))))
+ '(region ((t (:background "light gray" :foreground "dim gray" :inverse-video t))))
  '(tool-bar ((((class color) (min-colors 8)) (:foreground "yellow")))))
 
 (set-face-foreground 'minibuffer-prompt "white")
@@ -296,13 +339,13 @@
 
 ;; Python
 ;; --------------------
-(elpy-enable)
-(defadvice virtualenv-activate (after virtual-pdb)
-  (custom-set-variables
-     '(gud-pdb-command-name
-        (concat virtualenv-active "/bin/python -m pdb" ))))
+;; (elpy-enable)
+;; (defadvice virtualenv-activate (after virtual-pdb)
+;;   (custom-set-variables
+;;      '(gud-pdb-command-name
+;;         (concat virtualenv-active "/bin/python -m pdb" ))))
 
-(ad-activate 'virtualenv-activate)
+;;(ad-activate 'virtualenv-activate)
 
 (defun pyvenv-autoload ()
   (require 'projectile)
@@ -489,9 +532,9 @@
 
 
 ;; Colors
-(add-to-list 'custom-theme-load-path "~/.emacs.d/lisp/emacs-color-theme-solarized-master")
-(load-theme 'solarized t)
-
+;;(load-theme 'solarized-light t)
+(setq nord-comment-brightness 15)
+(load-theme 'nord t)
 ;; specify font for all unicode characters
 (when (member "Symbola" (font-family-list))
   (set-fontset-font t 'unicode "Symbola" nil 'prepend))
@@ -565,6 +608,13 @@ Run over region BEG to END."
 (global-set-key "\C-cgs" 'magit-status)
 (global-set-key "\C-cgl" 'magit-log-head)
 
+;;; C-f in the magit status buffer invokes the magit-gitflow popup. If you
+;;; would like to use a different key, set the magit-gitflow-popup-key variable
+;;; before loading magit-gitflow
+;; (setq magit-gitflow-popup-key "C-n")
+
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
 
 ;; Expand-region mode
 (global-set-key (kbd "C-$") 'er/expand-region)
@@ -614,6 +664,17 @@ Run over region BEG to END."
 ;; Projectile (C-c p ... [f..])
 (projectile-global-mode)
 
+;; A hack to fix that projectile asks git to lookup subdir files when
+;; there is a .git directory in it, even when we defined a .projectile
+;; file on project root level. Function originally defined in
+;; projectile.el
+(defun projectile-project-vcs (&optional project-root)
+  "Determine the VCS used by the project if any.
+PROJECT-ROOT is the targeted directory.  If nil, use
+`projectile-project-root'."
+  'none)
+
+
 (def-projectile-commander-method ?s
   "Open a *shell* buffer for the project."
   ;; This requires a snapshot version of Projectile.
@@ -628,7 +689,7 @@ Run over region BEG to END."
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
 
-(setq projectile-enable-caching 't)
+(setq projectile-enable-caching nil)
 (require 'helm-config)
 (helm-mode 1)
 (global-set-key (kbd "C-x b") 'helm-mini)
@@ -788,6 +849,7 @@ Try with '6-18-9-5-4-18-9-3-8-20-8-20-8-5-15-4-15-18-22-9-19-3-8-5-18'."
                  (org-present-read-write)))))
 
 (find-file-read-only "/home/ralf/dev/notes.txt")
+(find-file-read-only "/home/ralf/psps.csv")
 
 (defun openssl-decode-cert-pem (start end)
   "Decode a PEM encoded certificate in a region between START and END using openssl."
