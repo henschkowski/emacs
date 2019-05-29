@@ -813,7 +813,15 @@ Try with '6-18-9-5-4-18-9-3-8-20-8-20-8-5-15-4-15-18-22-9-19-3-8-5-18'."
       (insert datum)
       (clipboard-kill-region (point-min) (point-max)))))
 
-
+(defun current-time-seconds ()
+  "Get seconds since epoch."
+  (interactive)
+  (let ((seconds (float-time (current-time))))
+    (message "%f (in your clipboard)" seconds)
+    (with-temp-buffer
+      (insert (number-to-string seconds))
+      (clipboard-kill-region (point-min) (point-max)))))
+  
 (defun kill-buffers-matching-name-or-file (regexp)
   "Kill buffers whose name or file path match the specified REGEXP."
   (interactive "sKill buffers matching this regular expression: \n")
@@ -993,6 +1001,8 @@ DIR."
 
 (beacon-mode 1)
 (dimmer-mode)
+(global-set-key [C-mouse-4] 'text-scale-increase)
+(global-set-key [C-mouse-5] 'text-scale-decrease)
 ;;; init.el ends here
 
 
