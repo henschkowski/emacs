@@ -1003,6 +1003,20 @@ DIR."
 (dimmer-mode)
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
+
+;; Fix lie numbers with large fonts:  https://unix.stackexchange.com/questions/29786/font-size-issues-with-emacs-in-linum-mode/30087#30087
+(require 'linum)
+(defun linum-update-window-scale-fix (win)
+  "fix linum for scaled text"
+  (set-window-margins win
+          (ceiling (* (if (boundp 'text-scale-mode-step)
+                  (expt text-scale-mode-step
+                    text-scale-mode-amount) 1)
+              (if (car (window-margins))
+                  (car (window-margins)) 1)
+              ))))
+(advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
+
 ;;; init.el ends here
 
 
