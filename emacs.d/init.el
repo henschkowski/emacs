@@ -19,7 +19,9 @@
  ;; If there is more than one, they won't work right.
  '(blink-matching-paren t)
  '(clean-buffer-list-delay-general 1)
- '(clean-buffer-list-kill-never-buffer-names (quote ("*scratch*" "*Messages*" "init.el" "psps.csv" ".emacs" "notes.txt")))
+ '(clean-buffer-list-kill-never-buffer-names
+   (quote
+    ("*scratch*" "*Messages*" "init.el" "psps.csv" ".emacs" "notes.txt")))
  '(clean-buffer-list-kill-never-regexps (quote ("^ \\*Minibuf-.*\\*$")))
  '(csv-separators (quote (";" "	")))
  '(custom-safe-themes
@@ -28,11 +30,11 @@
  '(dimmer-fraction 0.35)
  '(dired-recursive-copies (quote always))
  '(dirtrack-list (quote (":\\(.*\\)\\$" 1)))
+ '(display-line-numbers-type t)
  '(frame-background-mode (quote dark))
  '(global-eldoc-mode nil)
  '(grep-highlight-matches nil)
  '(grep-use-null-device nil)
- '(helm-candidate-number-limit 5000)
  '(hlt-use-overlays-flag nil)
  '(indent-tabs-mode nil)
  '(line-number-display-limit-width 300)
@@ -51,7 +53,7 @@
  '(nxml-child-indent 4)
  '(package-selected-packages
    (quote
-    (helm-swoop edit-server-htmlize acme-search nord-theme evil-indent-plus highlight-indent-guides outline-magic solarized-theme magit-gitflow hungry-delete dimmer beacon focus dashboard replace+ csv-nav elpy pyvenv helm-projectile projectile better-defaults web-mode undo-tree yaml-mode urlenc realgud avy csv-mode highlight highlight-tail chess yasnippet smex smart-tabs-mode slime org-present multiple-cursors markdown-mode+ magit jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes flx-ido find-file-in-repository expand-region bm autopair)))
+    (smex amx  swiper-helm command-log-mode ess helm-swoop edit-server-htmlize acme-search nord-theme evil-indent-plus highlight-indent-guides outline-magic solarized-theme magit-gitflow hungry-delete dimmer beacon focus dashboard replace+ csv-nav helm-projectile web-mode undo-tree yaml-mode urlenc csv-mode highlight highlight-tail chess yasnippet smart-tabs-mode org-present multiple-cursors markdown-mode+ jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes find-file-in-repository expand-region bm autopair)))
  '(package-user-dir "~/.emacs.d")
  '(projectile-generic-command
    "find . \\( -path ./.git -o -path *.class \\) -prune -o -type f -print0")
@@ -94,6 +96,8 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list  'package-archives
               '("emacswiki" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/emacswiki/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 
@@ -134,7 +138,6 @@
                        highlight-indentation
                        hungry-delete
                        ido-vertical-mode
-                       ivy
                        jedi
                        auto-complete
                        jedi-core
@@ -239,8 +242,6 @@
  '(font-lock-comment-face ((((class color) (min-colors 8)) (:foreground "red"))))
  '(font-lock-function-name-face ((((class color) (min-colors 8)) (:foreground "lightblue" :weight bold))))
  '(font-lock-keyword-face ((((class color) (min-colors 8)) (:foreground "red" :weight bold))))
- '(helm-header ((t (:background "light slate gray" :foreground "NavajoWhite1"))))
- '(helm-selection ((t (:foreground "light sea green"))))
  '(highlight-changes ((t (:foreground "SeaGreen1"))))
  '(highlight-changes-delete ((t (:foreground "SeaGreen" :underline t))))
  '(magit-diff-file-heading-highlight ((t (:background "dark slate blue" :foreground "white"))))
@@ -284,15 +285,15 @@
 (require 'dashboard)
 (dashboard-setup-startup-hook)
 
-;; Show line numbers only when going to a line
+;; Show line numbers only when going to a line (requires emacs 26)
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input."
   (interactive)
   (unwind-protect
       (progn
-        (linum-mode 1)
+        (display-line-numbers-mode 1)
         (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
+    (display-line-numbers-mode -1)))
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
 
@@ -618,7 +619,7 @@ Run over region BEG to END."
 
 ;; Expand-region mode
 (global-set-key (kbd "C-$") 'er/expand-region)
-(global-set-key (kbd "C-ä") 'er/contract-region)
+(global-set-key (kbd "C-Ã¤") 'er/contract-region)
 
 
 
@@ -635,30 +636,6 @@ Run over region BEG to END."
 (global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-l") 'mc/mark-all-like-this)
 (global-set-key (kbd "C-c C-r") 'set-rectangular-region-anchor)
-
-
-
-;; ;; IDO 
-;; (require 'ido-vertical-mode)
-;; (require 'flx-ido)
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (ido-mode 1)
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-use-faces 't)
-;; (ido-vertical-mode)
-;; (setq ido-create-new-buffer 'always)
-;; (flx-ido-mode 1)
-
-;; (add-to-list 'ido-ignore-files "\\.class$")
-;; (setq ido-use-virtual-buffers t)
-
-;; (require 'smex)
-;; (smex-initialize)
-;; (global-set-key (kbd "M-x") 'smex)
-;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; ;; This is your old M-x.
-;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 
 ;; Projectile (C-c p ... [f..])
@@ -692,8 +669,58 @@ PROJECT-ROOT is the targeted directory.  If nil, use
 (setq projectile-enable-caching nil)
 (require 'helm-config)
 (helm-mode 1)
+
+
+(add-to-list 'load-path "~/.emacs.d/helm-swoop")
+(require 'helm-swoop)
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with <open> and enter text in its buffer.
+
+;; Change the keybinds to whatever you like :)
+(global-set-key (kbd "M-i") 'helm-swoop)
+(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+;; When doing isearch, hand the word over to helm-swoop
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+;; From helm-swoop to helm-multi-swoop-all
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+;; Instead of helm-multi-swoop-all, you can also use helm-multi-swoop-current-mode
+(define-key helm-swoop-map (kbd "M-m") 'helm-multi-swoop-current-mode-from-helm-swoop)
+
+;; Move up and down like isearch
+(define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+(define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
+
+;; Save buffer when helm-multi-swoop-edit complete
+(setq helm-multi-swoop-edit-save t)
+
+;; If this value is t, split window inside the current window
+(setq helm-swoop-split-with-multiple-windows 't)
+
+;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+(setq helm-swoop-split-direction 'split-window-vertically)
+
+;; If nil, you can slightly boost invoke speed in exchange for text color
+(setq helm-swoop-speed-or-color nil)
+
+;; ;; Go to the opposite side of line from the end or beginning of line
+(setq helm-swoop-move-to-line-cycle t)
+
+;; Optional face for line numbers
+;; Face name is `helm-swoop-line-number-face`
+(setq helm-swoop-use-line-number-face t)
+
+;; If you prefer fuzzy matching
+(setq helm-swoop-use-fuzzy-match nil)
+
+
+
 (global-set-key (kbd "C-x b") 'helm-mini)
-;;;;; To enable fuzzy matching, add the following settings:
+;;;; To enable fuzzy matching, add the following settings:
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
 
@@ -704,8 +731,11 @@ PROJECT-ROOT is the targeted directory.  If nil, use
 (setq helm-move-to-line-cycle-in-source t)
 
 
-;;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
-;;(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-e") 'helm-select-action) ; rebind tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "M-p") 'helm-previous-source) ; 
+(define-key helm-map (kbd "M-n") 'helm-next-source) ; 
 
 
 (defun nzz-abgruende (numbers)
@@ -757,7 +787,7 @@ Try with '6-18-9-5-4-18-9-3-8-20-8-20-8-5-15-4-15-18-22-9-19-3-8-5-18'."
 
 
 (defun decode-hex-string (hex-string)
-  "Decode the HEX-STRING înplace."
+  "Decode the HEX-STRING Ã®nplace."
   (apply #'concat 
          (loop for i from 0 to (- (/ (length hex-string) 2) 1) 
                for hex-byte = (substring hex-string (* 2 i) (* 2 (+ i 1)))
@@ -777,7 +807,7 @@ Try with '6-18-9-5-4-18-9-3-8-20-8-20-8-5-15-4-15-18-22-9-19-3-8-5-18'."
 
 
 (defun encode-hex-string (clear-string)
-  "Encode the CLEAR-STRING înplace."
+  "Encode the CLEAR-STRING Ã®nplace."
   (string-join (--map (format "%X" it) (string-to-list clear-string))))
 
 
@@ -821,7 +851,11 @@ Try with '6-18-9-5-4-18-9-3-8-20-8-20-8-5-15-4-15-18-22-9-19-3-8-5-18'."
     (with-temp-buffer
       (insert (number-to-string seconds))
       (clipboard-kill-region (point-min) (point-max)))))
-  
+
+ (defun rh-insert-timestamp ()
+   (interactive)
+   (insert (format-time-string "%Y-%m-%dT%H:%M:%S")))
+
 (defun kill-buffers-matching-name-or-file (regexp)
   "Kill buffers whose name or file path match the specified REGEXP."
   (interactive "sKill buffers matching this regular expression: \n")
@@ -1004,18 +1038,52 @@ DIR."
 (global-set-key [C-mouse-4] 'text-scale-increase)
 (global-set-key [C-mouse-5] 'text-scale-decrease)
 
-;; Fix lie numbers with large fonts:  https://unix.stackexchange.com/questions/29786/font-size-issues-with-emacs-in-linum-mode/30087#30087
-(require 'linum)
-(defun linum-update-window-scale-fix (win)
-  "fix linum for scaled text"
-  (set-window-margins win
-          (ceiling (* (if (boundp 'text-scale-mode-step)
-                  (expt text-scale-mode-step
-                    text-scale-mode-amount) 1)
-              (if (car (window-margins))
-                  (car (window-margins)) 1)
-              ))))
-(advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
+;; "gitflow.branch"
+(defun magit-gitflow-feature-start (name &optional base)
+  (interactive (list
+                (read-string "Feature name: ")
+                (magit-read-other-branch-or-commit "Base")))
+  (magit-run-gitflow "feature" "start"  magit-current-popup-args name base))
+
+
+;; https://gist.github.com/inouetmhr/4116307
+;; base64 encoded string without the padding (===)
+
+(defun base64-to-base64url (str)
+  (setq str (replace-regexp-in-string "=+$" "" str))
+  (setq str (replace-regexp-in-string "+" "-" str))
+  (setq str (replace-regexp-in-string "/" "_" str)))
+
+(defun base64url-to-base64 (str)
+  (setq str (replace-regexp-in-string "-" "+" str))
+  (setq str (replace-regexp-in-string "_" "/" str))
+  (let ((mod (% (length str) 4)))
+    (cond 
+     ((= mod 1) (concat str "==="))
+     ((= mod 2) (concat str "=="))
+     ((= mod 3) (concat str "="))
+     (t str))))
+
+(defun base64url-encode-string (str)
+  (base64-to-base64url (base64-encode-string str t)))
+
+(defun base64url-decode-string (str)
+  (base64-decode-string (base64url-to-base64 str)))
+
+(defun base64url-decode-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let ((new-text (base64url-decode-string (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert new-text))))
+
+(defun base64url-encode-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let ((new-text (base64url-encode-string (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert new-text))))
+
 
 ;;; init.el ends here
 
