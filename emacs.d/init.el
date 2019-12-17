@@ -53,7 +53,7 @@
  '(nxml-child-indent 4)
  '(package-selected-packages
    (quote
-    (smex amx  swiper-helm command-log-mode ess helm-swoop edit-server-htmlize acme-search nord-theme evil-indent-plus highlight-indent-guides outline-magic solarized-theme magit-gitflow hungry-delete dimmer beacon focus dashboard replace+ csv-nav helm-projectile web-mode undo-tree yaml-mode urlenc csv-mode highlight highlight-tail chess yasnippet smart-tabs-mode org-present multiple-cursors markdown-mode+ jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes find-file-in-repository expand-region bm autopair)))
+    (avy snakemake-mode smex amx swiper-helm command-log-mode ess helm-swoop edit-server-htmlize acme-search nord-theme evil-indent-plus highlight-indent-guides outline-magic solarized-theme magit-gitflow hungry-delete dimmer beacon focus dashboard replace+ csv-nav helm-projectile web-mode undo-tree yaml-mode urlenc csv-mode highlight highlight-tail chess yasnippet smart-tabs-mode org-present multiple-cursors markdown-mode+ jedi ido-vertical-mode highlight-chars helm-google helm-flycheck grizzl git-timemachine flycheck-pyflakes find-file-in-repository expand-region bm autopair)))
  '(package-user-dir "~/.emacs.d")
  '(projectile-generic-command
    "find . \\( -path ./.git -o -path *.class \\) -prune -o -type f -print0")
@@ -90,6 +90,20 @@
 
 ;;(setq url-proxy-services '(("http" . "127.0.0.1:3128")
 ;;                           ("https" . "127.0.0.1:3128")))
+
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (require 'package)
 (add-to-list 'package-archives
@@ -980,6 +994,8 @@ DIR."
 (setq mwheel-scroll-up-function 'mwheel-scroll-all-scroll-up-all)
 (setq mwheel-scroll-down-function 'mwheel-scroll-all-scroll-down-all)
 
+(global-set-key [C-mouse-4] 'text-scale-increase)
+(global-set-key [C-mouse-5] 'text-scale-decrease)
 
 (global-set-key (kbd "C-.") 'other-window)
 (global-set-key (kbd "C-,") 'prev-window)
@@ -988,42 +1004,18 @@ DIR."
   (interactive)
   (other-window -1))
 
-;; avy mode (jump to anything)
+;; avy mode (jump to anything: type search, then marker key)
+(require 'avy)
 (global-set-key (kbd "C--") 'avy-goto-char-2)
 
 (prefer-coding-system 'utf-8-unix)
 
 
-(defun highlight-line-dups-region (&optional start end face msgp)
-  (interactive `(,@(hlt-region-or-buffer-limits) nil t))
-  (let ((count  0)
-        line-re)
-    (save-excursion
-      (goto-char start)
-      (while (< (point) end)
-        (setq count    0
-              line-re  (concat "^" (regexp-quote (buffer-substring-no-properties
-                                                  (line-beginning-position)
-                                                  (line-end-position)))
-                               "$"))
-        (save-excursion
-          (goto-char start)
-          (while (< (point) end)
-            (if (not (re-search-forward line-re nil t))
-                (goto-char end)
-              (setq count  (1+ count))
-              (unless (< count 2)
-                (hlt-highlight-region
-                 (line-beginning-position) (line-end-position)
-                 face)
-                (forward-line 1)))))
-        (forward-line 1)))))
-
 (require 'visual-regexp)
-(define-key global-map (kbd "C-M-%") 'vr/query-replace)
+(define-key global-map (kbd "M-%") 'vr/query-replace)
 
 (defun just-one-space-in-region (beg end)
-  "replace all whitespace in the region with single spaces"
+  "Replace all whitespace in the region with single spaces"
   (interactive "r")
   (save-excursion
     (save-restriction
@@ -1032,11 +1024,11 @@ DIR."
       (while (re-search-forward "\\s-+" nil t)
         (replace-match " ")))))
 
-
+;; Whenever the window scrolls a light will shine on top of your cursor so you know where it is.
 (beacon-mode 1)
+
+;; Interactively highlight which buffer is active by dimming the others
 (dimmer-mode)
-(global-set-key [C-mouse-4] 'text-scale-increase)
-(global-set-key [C-mouse-5] 'text-scale-decrease)
 
 ;; "gitflow.branch"
 (defun magit-gitflow-feature-start (name &optional base)
