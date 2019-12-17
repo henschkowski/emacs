@@ -2,17 +2,17 @@
 ;; ----- smex-history -----
 (
  package-install
- package-refresh-contents
- comment-region
- find-grep
- find-grep-dired
  customize
- customize-group
+ swiper-backward
+ counsel-projectile-mode
+ counsel-yank-pop
+ ivy-minibuffer-grow
+ counsel-find-file
 )
 
 ;; ----- smex-data -----
 (
- (package-install . 8)
+ (package-install . 11)
  (comment-region . 2)
  (windmove-default-keybindings . 1)
  (eval-region . 2)
@@ -31,6 +31,12 @@
  (join-region . 1)
  (indent-region . 1)
  (find-grep . 12)
- (customize . 4)
+ (customize . 9)
  (find-grep-dired . 6)
+ (counsel-find-file . 1)
+ (counsel-projectile-mode . 2)
+ (ivy-minibuffer-grow . 12)
+ (brds/swiper-backward . 1)
+ (counsel-yank-pop . 1)
+ (swiper-backward . 2)
 )
